@@ -6,6 +6,16 @@ let lecturer = true
 socket = new WebSocket(`ws://localhost:8000/ws/${id}`);
 console.log("This is ws: ", socket)
 
+var peerConfiguration = {};
+
+(async() => {
+  const response = await axios.get("https://first-webrtc-app.metered.live/api/v1/turn/credentials?apiKey=3e08a449e524357cc48147d16d2da0e6f960");
+  const iceServers = response.data;
+  peerConfiguration.iceServers = iceServers
+})();
+
+// var myPeerConnection = new RTCPeerConnection(peerConfiguration);
+
 // THIS FUNCTION IS RESPONSIBLE FOR SENDING DATA TO THE SERVER
 const sendData = (data) => {
     console.log("sending data");
@@ -95,7 +105,7 @@ const onTrack = (event) => {
 const createPeerConnection = () => {
     try {
         // 1. Peer A creates a RTCPeerConnection object for the connection.
-        pc = new RTCPeerConnection({});
+        pc = new RTCPeerConnection(peerConfiguration);
         pc.onicecandidate = onIceCandidate;
         pc.ontrack = onTrack;
 
