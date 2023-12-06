@@ -9,7 +9,7 @@ console.log("This is ws: ", socket)
 var peerConfiguration = {};
 
 (async() => {
-  const response = await axios.get("https://first-webrtc-app.metered.live/api/v1/turn/credentials?apiKey=3e08a449e524357cc48147d16d2da0e6f960");
+  const response = await fetch("https://first-webrtc-app.metered.live/api/v1/turn/credentials?apiKey=3e08a449e524357cc48147d16d2da0e6f960");
   const iceServers = response.data;
   peerConfiguration.iceServers = iceServers
 })();
@@ -38,37 +38,13 @@ const sendData = (data) => {
 // THE FIRST FUNCTION TO BE EXECUTED
 const startConnection = () => {
     
-    // navigator.mediaDevices
-    //     .getUserMedia({
-    //         audio: true,
-    //         video: {
-    //             height: 350,
-    //             width: 350,
-    //         },
-    //     })
-    //     .then((stream) => {
-    //         localStreamElement.srcObject = stream;
-    //         // socket.connect();
-    //         let payload = JSON.stringify({
-    //             action: "join", 
-    //             user_id: id,
-    //             room: 8
-    //         })
-    //         // socket.emit("join", { username: "localUsername", room: "roomName" });
-
-    //         socket.send(payload)
-    //     })
-    //     .catch((error) => {
-    //         console.error("Stream not found: ", error);
-    //     });
-
     navigator.mediaDevices
-        .getDisplayMedia({
-            audio: true,  
+        .getUserMedia({
+            audio: true,
             video: {
-                height: 500,
-                width: 500,
-            }, 
+                height: 350,
+                width: 350,
+            },
         })
         .then((stream) => {
             localStreamElement.srcObject = stream;
@@ -78,11 +54,35 @@ const startConnection = () => {
                 user_id: id,
                 room: 8
             })
+            // socket.emit("join", { username: "localUsername", room: "roomName" });
+
             socket.send(payload)
         })
         .catch((error) => {
             console.error("Stream not found: ", error);
         });
+
+    // navigator.mediaDevices
+    //     .getDisplayMedia({
+    //         audio: true,  
+    //         video: {
+    //             height: 500,
+    //             width: 500,
+    //         }, 
+    //     })
+    //     .then((stream) => {
+    //         localStreamElement.srcObject = stream;
+    //         // socket.connect();
+    //         let payload = JSON.stringify({
+    //             action: "join", 
+    //             user_id: id,
+    //             room: 8
+    //         })
+    //         socket.send(payload)
+    //     })
+    //     .catch((error) => {
+    //         console.error("Stream not found: ", error);
+    //     });
 };
 
 // FUNTION IS RESPONSILE FOR SENDING ICE CANDIDATES TO THE SERVER WHICH THEN SENDS TO OTHER PEERS
