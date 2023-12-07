@@ -3,8 +3,8 @@ let pc;
 let localStreamElement = document.getElementById('localStream');
 let remoteStreamElement = document.getElementById('remoteStream');
 let lecturer = true
-socket_broadcaster = new WebSocket(`wss://${window.location.hostname}/ws/${id}`);
-console.log("This is ws: ", socket_broadcaster)
+socket = new WebSocket(`wss://${window.location.hostname}/ws/${id}`);
+console.log("This is ws: ", socket)
 
 var peerConfiguration = {};
 
@@ -26,7 +26,7 @@ const sendData = (data) => {
     });
     console.log(jsonData);  
 
-    socket_broadcaster.send(jsonData);
+    socket.send(jsonData);
     // socket.emit("data", {
     //     username: "localUsername",  // replace with actual username
     //     room: "roomName",  // replace with actual room name
@@ -167,7 +167,7 @@ const signalingDataHandler = (data) => {
 };
 
 // THIS ONE IS RESPONSIBLE FOR GETTING THE DATA THAT THE SERVER SENDS AND CALLING THE SIGNALING DATA HANDLER TO TAKE CARE OF THE REST
-socket_broadcaster.onmessage = function(event) {
+socket.onmessage = function(event) {
     var message = event.data
     
     try{
