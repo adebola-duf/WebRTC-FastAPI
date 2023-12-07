@@ -23,7 +23,7 @@ window.onload = () => {
 async function init() {
     if (role === "broadcaster") {
         console.log("Starting Broadcast...");
-        const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         document.getElementById("video").srcObject = stream;
         peer = createPeer();
         stream.getTracks().forEach(track => peer.addTrack(track, stream));
