@@ -3,8 +3,8 @@ let pc;
 let localStreamElement = document.getElementById('localStream');
 let remoteStreamElement = document.getElementById('remoteStream');
 let lecturer = true
-socket = new WebSocket(`wss://${window.location.hostname}/ws/${id}`);
-console.log("This is ws: ", socket)
+socket_broadcaster = new WebSocket(`wss://${window.location.hostname}/ws/${id}`);
+console.log("This is ws: ", socket_broadcaster)
 
 var peerConfiguration = {};
 
@@ -14,7 +14,6 @@ var peerConfiguration = {};
   peerConfiguration.iceServers = iceServers
 })();
 
-// var myPeerConnection = new RTCPeerConnection(peerConfiguration);
 
 // THIS FUNCTION IS RESPONSIBLE FOR SENDING DATA TO THE SERVER
 const sendData = (data) => {
@@ -27,7 +26,7 @@ const sendData = (data) => {
     });
     console.log(jsonData);  
 
-    socket.send(jsonData);
+    socket_broadcaster.send(jsonData);
     // socket.emit("data", {
     //     username: "localUsername",  // replace with actual username
     //     room: "roomName",  // replace with actual room name
@@ -38,37 +37,13 @@ const sendData = (data) => {
 // THE FIRST FUNCTION TO BE EXECUTED
 const startConnection = () => {
     
-    navigator.mediaDevices
-        .getUserMedia({
-            audio: true,
-            video: {
-                height: 350,
-                width: 350,
-            },
-        })
-        .then((stream) => {
-            localStreamElement.srcObject = stream;
-            // socket.connect();
-            let payload = JSON.stringify({
-                action: "join", 
-                user_id: id,
-                room: 8
-            })
-            // socket.emit("join", { username: "localUsername", room: "roomName" });
-
-            socket.send(payload)
-        })
-        .catch((error) => {
-            console.error("Stream not found: ", error);
-        });
-
     // navigator.mediaDevices
-    //     .getDisplayMedia({
-    //         audio: true,  
+    //     .getUserMedia({
+    //         audio: true,
     //         video: {
-    //             height: 500,
-    //             width: 500,
-    //         }, 
+    //             height: 350,
+    //             width: 350,
+    //         },
     //     })
     //     .then((stream) => {
     //         localStreamElement.srcObject = stream;
@@ -78,11 +53,35 @@ const startConnection = () => {
     //             user_id: id,
     //             room: 8
     //         })
+    //         // socket.emit("join", { username: "localUsername", room: "roomName" });
+
     //         socket.send(payload)
     //     })
     //     .catch((error) => {
     //         console.error("Stream not found: ", error);
     //     });
+
+    navigator.mediaDevices
+        .getDisplayMedia({
+            audio: true,  
+            video: {
+                height: 500,
+                width: 500,
+            }, 
+        })
+        .then((stream) => {
+            localStreamElement.srcObject = stream;
+            // socket.connect();
+            let payload = JSON.stringify({
+                action: "join", 
+                user_id: id,
+                room: 8
+            })
+            socket_broadcaster.send(payload)
+        })
+        .catch((error) => {
+            console.error("Stream not found: ", error);
+        });
 };
 
 // FUNTION IS RESPONSILE FOR SENDING ICE CANDIDATES TO THE SERVER WHICH THEN SENDS TO OTHER PEERS
@@ -189,7 +188,7 @@ const signalingDataHandler = (data) => {
 };
 
 // THIS ONE IS RESPONSIBLE FOR GETTING THE DATA THAT THE SERVER SENDS AND CALLING THE SIGNALING DATA HANDLER TO TAKE CARE OF THE REST
-socket.onmessage = function(event) {
+socket_broadcaster.onmessage = function(event) {
     var message = event.data
     
     try{

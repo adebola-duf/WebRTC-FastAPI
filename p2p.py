@@ -49,7 +49,7 @@ async def websocket_endpoint(websocket: WebSocket, id: int):
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("p2p.html", {"request": request})
 
 if __name__ == "__main__":
     import uvicorn
