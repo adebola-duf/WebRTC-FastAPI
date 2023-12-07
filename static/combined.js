@@ -83,7 +83,7 @@ BroadcasterSocket.onmessage = function (event) {
 viewersSocket.onmessage = function (event) {
     try {
         var jsonMessage = JSON.parse(event.data);
-        console.log("Consumer Message: ", jsonMessage);
+        console.log("Viewer Message: ", jsonMessage);
         const desc = new RTCSessionDescription(jsonMessage);
         peer.setRemoteDescription(desc).catch(e => console.log(e));
     } catch (e) {
